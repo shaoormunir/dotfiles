@@ -1,6 +1,10 @@
 # Path
 export PATH="$HOME/.local/bin:/opt/homebrew/share/google-cloud-sdk/bin:$PATH"
 
+# Editor
+export EDITOR="code --wait"
+export VISUAL="code --wait"
+
 # ── History ──────────────────────────────────────────────
 HISTFILE=~/.zsh_history
 HISTSIZE=50000
@@ -29,7 +33,11 @@ if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
 fi
 autoload -Uz compinit
-compinit
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
 
 # Completion styling (like omz)
 zstyle ':completion:*' menu select                       # arrow-key menu
@@ -60,7 +68,7 @@ alias ll="eza -l --icons --git"
 alias la="eza -la --icons --git"
 alias lt="eza -l --icons --git --sort=modified"
 alias tree="eza --tree --icons"
-alias cat="bat"
+alias cat="bat --paging=never"
 alias d='dirs -v'                         # directory stack
 alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'  # colorized --help
 for index ({1..9}) alias "$index"="cd +${index}"; unset index  # cd to dir stack entry
@@ -79,20 +87,6 @@ bindkey '^[[B' history-substring-search-down
 # ── Zoxide (smarter cd) ─────────────────────────────────
 eval "$(zoxide init zsh)"
 
-# ── Splash ───────────────────────────────────────────────
-if [[ -o interactive ]]; then
-  local _s="%F{240}·%f"
-  local _bat=$(pmset -g batt | grep -oE '[0-9]+%;' | tr -d '%;')
-  local _up=$(uptime | sed 's/.*up //;s/,.*load.*//' | xargs)
-  local _disk_used _disk_total _disk_pct
-  read _disk_used _disk_total _disk_pct <<< "$(command df -h / | command awk 'NR==2{gsub(/%/,"",$5); print $3, $2, $5}')"
-  local _mem_used=$(command vm_stat | command awk '/Pages active/{a=$3} /Pages wired/{w=$4} /page size of/{ps=$8} END{gsub(/\./,"",a); gsub(/\./,"",w); printf "%.0f", (a+w)*ps/1073741824}')
-  local _mem_total=$(( $(sysctl -n hw.memsize) / 1073741824 ))
-  local _cpu=$(command top -l 1 -n 0 2>/dev/null | command awk '/CPU usage/{gsub(/%/,"",$3); printf "%.0f", $3}')
-  print -P ""
-  print -P "  %F{yellow}bat ${_bat}%%%f  ${_s}  %F{blue}up ${_up}%f  ${_s}  %F{magenta}disk ${_disk_used}/${_disk_total} (${_disk_pct}%%)%f  ${_s}  %F{green}mem ${_mem_used}/${_mem_total}GB ($(((_mem_used * 100) / _mem_total))%%)%f  ${_s}  %F{cyan}cpu ${_cpu}%%%f"
-  print -P ""
-fi
 
 # ── Starship prompt (must be last) ──────────────────────
 eval "$(starship init zsh)"

@@ -6,9 +6,9 @@ format = "$directory$git_branch$git_status$python$nodejs$rust$golang$java$docker
 [directory]
 truncation_length = 5
 truncation_symbol = "…/"
-style = "bold cyan"
-read_only = " 󰌾"
-home_symbol = ""
+style = "bold #8be9fd"
+read_only = "󰌾"
+home_symbol = "~"
 repo_root_style = "bold yellow"
 before_repo_root_style = "dimmed white"
 repo_root_format = "[$before_root_path]($before_repo_root_style)[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
@@ -19,7 +19,7 @@ truncate_to_repo = true
 [git_branch]
 symbol = ""
 style = "bold purple"
-format = "[on $symbol $branch(:$remote_branch)]($style) "
+format = '[(\($branch(:$remote_branch)\))]($style) '
 
 [git_status]
 ahead = "[⇡${count}](bold green)"
@@ -30,19 +30,19 @@ untracked = "[?${count}](bold blue)"
 stashed = "[*${count}](dimmed white)"
 modified = "[!${count}](bold yellow)"
 staged = "[+${count}](bold green)"
-renamed = "[»${count}](bold cyan)"
+renamed = "[»${count}](bold magenta)"
 deleted = "[✘${count}](bold red)"
 format = '($all_status$ahead_behind )'
 
 # ── Languages (only show when relevant) ──────────────────
 [python]
 symbol = " "
-style = "bold yellow"
+style = "bold #3776ab"
 format = '[$symbol($virtualenv)]($style) '
 
 [nodejs]
 symbol = " "
-style = "bold green"
+style = "bold #68a063"
 format = '[$symbol]($style) '
 
 [rust]
@@ -52,7 +52,7 @@ format = '[$symbol]($style) '
 
 [golang]
 symbol = " "
-style = "bold cyan"
+style = "bold #00add8"
 format = '[$symbol]($style) '
 
 [java]
@@ -62,7 +62,7 @@ format = '[$symbol]($style) '
 
 [docker_context]
 symbol = " "
-style = "bold blue"
+style = "bold #2496ed"
 format = '[$symbol$context]($style) '
 
 [gcloud]
@@ -75,8 +75,8 @@ symbol = " "
 # ── Right side ───────────────────────────────────────────
 [cmd_duration]
 min_time = 2_000
-format = "[ $duration]($style) "
-style = "bold yellow"
+format = "[$duration]($style) "
+style = "bold #ffb86c"
 
 [time]
 disabled = true
