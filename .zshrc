@@ -1,10 +1,3 @@
-# Path
-export PATH="$HOME/.local/bin:/opt/homebrew/share/google-cloud-sdk/bin:$PATH"
-
-# Editor
-export EDITOR="code --wait"
-export VISUAL="code --wait"
-
 # ── History ──────────────────────────────────────────────
 HISTFILE=~/.zsh_history
 HISTSIZE=50000
@@ -23,7 +16,6 @@ setopt AUTO_CD                   # cd by typing directory name
 setopt AUTO_PUSHD                # make cd push the old directory onto the stack
 setopt PUSHD_IGNORE_DUPS         # no duplicates in dir stack
 setopt PUSHD_SILENT              # don't print dir stack after pushd/popd
-setopt CORRECT                   # command auto-correction
 setopt INTERACTIVE_COMMENTS      # allow comments in interactive shell
 setopt EXTENDED_GLOB             # extended globbing (#, ~, ^)
 setopt NO_BEEP                   # no beeping
@@ -62,7 +54,7 @@ bindkey '^[[H' beginning-of-line          # Home
 bindkey '^[[F' end-of-line                # End
 # Up/Down arrow history search is handled by zsh-history-substring-search plugin
 
-# ── Aliases ──────────────────────────────────────────────
+# ── Aliases: files & navigation ──────────────────────────
 alias ls="eza --icons"
 alias ll="eza -l --icons --git"
 alias la="eza -la --icons --git"
@@ -73,20 +65,43 @@ alias d='dirs -v'                         # directory stack
 alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'  # colorized --help
 for index ({1..9}) alias "$index"="cd +${index}"; unset index  # cd to dir stack entry
 
+# ── Aliases: git ─────────────────────────────────────────
+alias g="git"
+alias gs="git status -sb"
+alias gc="git commit"
+alias gp="git push"
+alias gl="git log --oneline --graph --decorate -20"
+alias gd="git diff"
+alias gds="git diff --staged"
+alias gco="git checkout"
+alias gb="git branch"
+
+# ── Aliases: utilities ───────────────────────────────────
+alias reload="source ~/.zshrc"
+alias ip="curl -s ifconfig.me"
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias ports="lsof -iTCP -sTCP:LISTEN -n -P"
+alias brewup="brew update && brew upgrade && brew cleanup"
+
 # ── fzf ──────────────────────────────────────────────────
-source <(fzf --zsh)
-export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border --color=fg:#f8f8f2,bg:-1,hl:#bd93f9 --color=fg+:#f8f8f2,bg+:#44475a,hl+:#bd93f9 --color=info:#ffb86c,prompt:#50fa7b,pointer:#ff79c6 --color=marker:#ff79c6,spinner:#ffb86c,header:#6272a4"
+if (( $+commands[fzf] )); then
+  source <(fzf --zsh)
+  export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border --color=fg:#f8f8f2,bg:-1,hl:#bd93f9 --color=fg+:#f8f8f2,bg+:#44475a,hl+:#bd93f9 --color=info:#ffb86c,prompt:#50fa7b,pointer:#ff79c6 --color=marker:#ff79c6,spinner:#ffb86c,header:#6272a4"
+  export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always {}' --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+  export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
+fi
 
 # ── Zsh plugins ──────────────────────────────────────────
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /opt/homebrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+[[ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+[[ -f /opt/homebrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh ]] && source /opt/homebrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+[[ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 
 # ── Zoxide (smarter cd) ─────────────────────────────────
-eval "$(zoxide init zsh)"
-
+(( $+commands[zoxide] )) && eval "$(zoxide init zsh)"
 
 # ── Starship prompt (must be last) ──────────────────────
-eval "$(starship init zsh)"
+(( $+commands[starship] )) && eval "$(starship init zsh)"

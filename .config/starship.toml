@@ -1,15 +1,35 @@
-# Starship config — clean single-line prompt
+# Starship config — clean two-line prompt with right-side context
 
-format = "$directory$git_branch$git_status$python$nodejs$rust$golang$java$docker_context$cmd_duration$character"
+format = "$username$hostname$os$directory$git_branch$git_status$line_break$character"
+right_format = "$python$nodejs$rust$golang$java$docker_context$cmd_duration"
+
+# ── OS icon ──────────────────────────────────────────────
+[os]
+disabled = false
+style = "bold #8be9fd"
+
+[os.symbols]
+Macos = " "
+
+# ── SSH awareness ────────────────────────────────────────
+[username]
+show_always = false
+style_user = "dimmed white"
+format = "[$user]($style)@"
+
+[hostname]
+ssh_only = true
+style = "dimmed white"
+format = "[$hostname]($style) "
 
 # ── Directory ────────────────────────────────────────────
 [directory]
-truncation_length = 5
+truncation_length = 4
 truncation_symbol = "…/"
 style = "bold #8be9fd"
 read_only = "󰌾"
 home_symbol = "~"
-repo_root_style = "bold yellow"
+repo_root_style = "bold #f1fa8c"
 before_repo_root_style = "dimmed white"
 repo_root_format = "[$before_root_path]($before_repo_root_style)[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
 format = "[$path]($style)[$read_only]($read_only_style) "
@@ -18,7 +38,7 @@ truncate_to_repo = true
 # ── Git ──────────────────────────────────────────────────
 [git_branch]
 symbol = ""
-style = "bold purple"
+style = "bold #bd93f9"
 format = '[(\($branch(:$remote_branch)\))]($style) '
 
 [git_status]
@@ -36,43 +56,38 @@ format = '($all_status$ahead_behind )'
 
 # ── Languages (only show when relevant) ──────────────────
 [python]
-symbol = " "
+symbol = " "
 style = "bold #3776ab"
 format = '[$symbol($virtualenv)]($style) '
 
 [nodejs]
-symbol = " "
+symbol = " "
 style = "bold #68a063"
 format = '[$symbol]($style) '
 
 [rust]
-symbol = " "
+symbol = " "
 style = "bold #f74c00"
 format = '[$symbol]($style) '
 
 [golang]
-symbol = " "
+symbol = " "
 style = "bold #00add8"
 format = '[$symbol]($style) '
 
 [java]
-symbol = " "
+symbol = " "
 style = "bold #f89820"
 format = '[$symbol]($style) '
 
 [docker_context]
-symbol = " "
+symbol = " "
 style = "bold #2496ed"
 format = '[$symbol$context]($style) '
 
 [gcloud]
 disabled = true
 
-# ── Fill (pushes right side content) ─────────────────────
-[fill]
-symbol = " "
-
-# ── Right side ───────────────────────────────────────────
 [cmd_duration]
 min_time = 2_000
 format = "[$duration]($style) "
